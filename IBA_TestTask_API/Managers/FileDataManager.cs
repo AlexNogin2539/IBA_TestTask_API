@@ -44,7 +44,7 @@ namespace IBA_TestTask_API.Managers
         public IList<ControlSystemData> GetOutspeedData(DateTime date, double speed)
         {
             using var reader = new StreamReader(_appSettings.FilePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            using var csv = new CsvReader(reader, _csvConfig);
             var result = csv.GetRecords<ControlSystemData>();
             return result.Where(d => d.DateTime.Value.Date == date.Date && d.VehicleSpeed > speed).ToList();
         }
@@ -52,7 +52,7 @@ namespace IBA_TestTask_API.Managers
         public ControlSystemData GetMaxSpeedData(DateTime date)
         {
             using var reader = new StreamReader(_appSettings.FilePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            using var csv = new CsvReader(reader, _csvConfig);
             var result = csv.GetRecords<ControlSystemData>();
             return result.Where(p => p.DateTime.Value.Date == date.Date).OrderByDescending(p => p.VehicleSpeed).FirstOrDefault();
         }
@@ -60,7 +60,7 @@ namespace IBA_TestTask_API.Managers
         public ControlSystemData GetMinSpeedData(DateTime date)
         {
             using var reader = new StreamReader(_appSettings.FilePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            using var csv = new CsvReader(reader, _csvConfig);
             var result = csv.GetRecords<ControlSystemData>();
             return result.Where(p => p.DateTime.Value.Date == date.Date).OrderByDescending(p => p.VehicleSpeed).LastOrDefault();
         }
@@ -68,7 +68,7 @@ namespace IBA_TestTask_API.Managers
         public IList<ControlSystemData> GetAllData()
         {
             using var reader = new StreamReader(_appSettings.FilePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            using var csv = new CsvReader(reader, _csvConfig);
             csv.Context.RegisterClassMap<ControlSystemDataMap>();
             return csv.GetRecords<ControlSystemData>().ToList();
         }
@@ -85,9 +85,9 @@ namespace IBA_TestTask_API.Managers
     {
         public ControlSystemDataMap()
         {
-            Map(m => m.DateTime).Index(0).Name("Date_Time");
-            Map(m => m.VehicleIDNumber).Index(1).Name("Vehicle_ID_Number");
-            Map(m => m.VehicleSpeed).Index(2).Name("Vehicle_Speed");
+            Map(m => m.DateTime).Index(0).Name("DateTime");
+            Map(m => m.VehicleIDNumber).Index(1).Name("VehicleIDNumber");
+            Map(m => m.VehicleSpeed).Index(2).Name("VehicleSpeed");
         }
     }
 }
